@@ -23,7 +23,7 @@ public class S5_CRUD {
 
             //Bước 4: Thực thi câu lệnh sql
             
-            //Bài 1: INSERT
+            //Bài 1: INSERT, DELETE, UPDATE đều sử dụng cơ chế Excuteupdate
             String insert = "INSERT INTO [ChucVu] ([MaChucVu],[TenChucVu])"
                     + "Values('Dungna2999','Dungaaa')";
             
@@ -42,7 +42,7 @@ public class S5_CRUD {
             String url = "jdbc:sqlserver://localhost:1433;databaseName=DungNA_ShopFPT";
             String acc = "sa",pass ="abc@123A";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            //System.out.println("Kế nối CSDL thành công");
+            
             return DriverManager.getConnection(url,acc,pass);
         } catch (Exception ex) {
             ex.printStackTrace();
