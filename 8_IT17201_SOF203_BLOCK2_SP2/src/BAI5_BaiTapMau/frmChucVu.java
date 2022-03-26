@@ -5,8 +5,10 @@
 package BAI5_BaiTapMau;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,14 +23,25 @@ public class frmChucVu extends javax.swing.JFrame {
     public frmChucVu() {
         initComponents();
         _ChucVuService = new ChucVuService();
-        loadTable();
+        loadTable(_ChucVuService.getlstChucVus());
+        ButtonGroup btg = new ButtonGroup();
+        btg.add(rdb_asc);
+        btg.add(rdb_desc);
+        rdb_asc.setSelected(true);
     }
-    void loadTable(){
-        if (_ChucVuService._lstChucVus.isEmpty()) return;
+    ChucVu getGuiDataControl(){//Lấy data nhanh từ control
+        return new ChucVu(-1, txt_Ma.getText(), txt_Ten.getText());
+    }
+    void loadTable(List<ChucVu> lstChucVus){
         _DefaultTableModel = (DefaultTableModel) tbl_ChucVu.getModel();
+        if (lstChucVus.isEmpty()) {
+            _DefaultTableModel.setRowCount(0);
+            return;
+        }
+        
         _DefaultTableModel.setRowCount(0);
         int stt = 1;
-        for (ChucVu x : _ChucVuService._lstChucVus) {
+        for (ChucVu x : lstChucVus) {
             _DefaultTableModel.addRow(new Object[]{stt,x.getMa(),x.getTen()});
             stt++;
         }
@@ -43,9 +56,9 @@ public class frmChucVu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton4 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btn_Clear = new javax.swing.JButton();
+        btn_Xoa = new javax.swing.JButton();
+        btn_Sua = new javax.swing.JButton();
         btn_Them = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_ChucVu = new javax.swing.JTable();
@@ -53,17 +66,36 @@ public class frmChucVu extends javax.swing.JFrame {
         txt_Ten = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        txt_TimKiem = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        rdb_asc = new javax.swing.JRadioButton();
+        rdb_desc = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton4.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jButton4.setText("Clear");
+        btn_Clear.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        btn_Clear.setText("Clear");
+        btn_Clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ClearActionPerformed(evt);
+            }
+        });
 
-        jButton3.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jButton3.setText("Xoá");
+        btn_Xoa.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        btn_Xoa.setText("Xoá");
+        btn_Xoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_XoaActionPerformed(evt);
+            }
+        });
 
-        jButton2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jButton2.setText("Sửa");
+        btn_Sua.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        btn_Sua.setText("Sửa");
+        btn_Sua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SuaActionPerformed(evt);
+            }
+        });
 
         btn_Them.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         btn_Them.setText("Thêm");
@@ -84,6 +116,11 @@ public class frmChucVu extends javax.swing.JFrame {
                 "STT", "Mã Chức Vụ", "Tên Chức Vụ"
             }
         ));
+        tbl_ChucVu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_ChucVuMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbl_ChucVu);
 
         txt_Ma.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
@@ -98,62 +135,100 @@ public class frmChucVu extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel1.setText("Mã:");
 
+        txt_TimKiem.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        txt_TimKiem.setText("Tìm kiếm");
+        txt_TimKiem.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txt_TimKiemCaretUpdate(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        jLabel3.setText("Quản lý chức vụ");
+
+        rdb_asc.setText("ASC");
+        rdb_asc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rdb_ascMouseClicked(evt);
+            }
+        });
+
+        rdb_desc.setText("DESC");
+        rdb_desc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                rdb_descMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txt_Ten, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txt_Ma, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)))
-                            .addComponent(jButton4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(223, 223, 223)
-                        .addComponent(btn_Them)))
-                .addContainerGap(237, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(btn_Them)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3))
+                                .addComponent(txt_Ten, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txt_Ma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1))
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_Ma, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24)
+                        .addComponent(btn_Sua, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_Clear))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txt_TimKiem, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(237, 237, 237)
+                                .addComponent(btn_Them)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_Xoa, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(rdb_asc)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txt_Ten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(183, Short.MAX_VALUE))
+                                .addComponent(rdb_desc)))))
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_Them)
+                            .addComponent(btn_Xoa))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_Sua)
+                            .addComponent(btn_Clear)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_Ma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_Ten, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_TimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rdb_asc)
+                    .addComponent(rdb_desc))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -161,13 +236,64 @@ public class frmChucVu extends javax.swing.JFrame {
 
     private void btn_ThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThemActionPerformed
        try {
-           JOptionPane.showMessageDialog(this, _ChucVuService.addChucVu(new ChucVu(-1, txt_Ma.getText(), txt_Ten.getText())));
+           JOptionPane.showMessageDialog(this, _ChucVuService.addChucVu(getGuiDataControl()));
            _ChucVuService.getlstChucVusFromDB();//Mỗi lần insert thì sẽ chọc vào DB để lấy dữ liệu
-           loadTable();
+           loadTable(_ChucVuService.getlstChucVus());
        } catch (SQLException ex) {
            Logger.getLogger(frmChucVu.class.getName()).log(Level.SEVERE, null, ex);
        }
     }//GEN-LAST:event_btn_ThemActionPerformed
+
+    private void tbl_ChucVuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ChucVuMouseClicked
+        int rowIndex = tbl_ChucVu.getSelectedRow();
+        if (rowIndex == -1)return;
+        String maChucVu = tbl_ChucVu.getModel().getValueAt(rowIndex, 1).toString();//Lấy giá trị tại cell theo row và col
+        System.out.println(maChucVu);
+        txt_Ma.setText(maChucVu);
+        txt_Ten.setText(tbl_ChucVu.getModel().getValueAt(rowIndex, 2).toString());
+    }//GEN-LAST:event_tbl_ChucVuMouseClicked
+
+    private void btn_SuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SuaActionPerformed
+       try {
+           txt_Ma.setEnabled(false);
+           JOptionPane.showMessageDialog(this, _ChucVuService.updateChucVu(getGuiDataControl()));
+           _ChucVuService.getlstChucVusFromDB();//Mỗi lần tác động vào db thì sẽ chọc vào DB để lấy dữ liệu
+           loadTable(_ChucVuService.getlstChucVus());
+       } catch (SQLException ex) {
+           Logger.getLogger(frmChucVu.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }//GEN-LAST:event_btn_SuaActionPerformed
+
+    private void btn_XoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaActionPerformed
+       try {
+           txt_Ma.setEnabled(false);
+           JOptionPane.showMessageDialog(this, _ChucVuService.deleteChucVu(getGuiDataControl()));
+           _ChucVuService.getlstChucVusFromDB();//Mỗi lần tác động vào db thì sẽ chọc vào DB để lấy dữ liệu
+           loadTable(_ChucVuService.getlstChucVus());
+       } catch (SQLException ex) {
+           Logger.getLogger(frmChucVu.class.getName()).log(Level.SEVERE, null, ex);
+       }
+    }//GEN-LAST:event_btn_XoaActionPerformed
+
+    private void txt_TimKiemCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txt_TimKiemCaretUpdate
+        if (txt_TimKiem.getText().isEmpty())loadTable(_ChucVuService.getlstChucVus());
+        
+        loadTable(_ChucVuService.search(txt_TimKiem.getText()));
+    }//GEN-LAST:event_txt_TimKiemCaretUpdate
+
+    private void rdb_ascMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdb_ascMouseClicked
+         loadTable(_ChucVuService.sort(1));
+    }//GEN-LAST:event_rdb_ascMouseClicked
+
+    private void rdb_descMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rdb_descMouseClicked
+        loadTable(_ChucVuService.sort(0));
+    }//GEN-LAST:event_rdb_descMouseClicked
+
+    private void btn_ClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ClearActionPerformed
+        txt_Ma.setEnabled(true);
+        txt_Ma.setText("");
+        txt_Ten.setText("");
+    }//GEN-LAST:event_btn_ClearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,15 +331,19 @@ public class frmChucVu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_Clear;
+    private javax.swing.JButton btn_Sua;
     private javax.swing.JButton btn_Them;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btn_Xoa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JRadioButton rdb_asc;
+    private javax.swing.JRadioButton rdb_desc;
     private javax.swing.JTable tbl_ChucVu;
     private javax.swing.JTextField txt_Ma;
     private javax.swing.JTextField txt_Ten;
+    private javax.swing.JTextField txt_TimKiem;
     // End of variables declaration//GEN-END:variables
 }

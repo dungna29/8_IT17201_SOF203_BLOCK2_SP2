@@ -7,6 +7,7 @@ package BAI5_BaiTapMau;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -48,6 +49,41 @@ public class ChucVuService {
           return "Không thành công";
         }
     }
+    public String updateChucVu(ChucVu cv){
+        try {
+            if (getIndexByMa(cv.getMa()) == -3) return "Không tìm thấy mã";
+            return updateChucVuToDB(cv);
+        } catch (SQLException ex) {
+            Logger.getLogger(ChucVuService.class.getName()).log(Level.SEVERE, null, ex);
+            return "Không thành công";
+        }
+    }
+    public String deleteChucVu(ChucVu cv){
+        try {
+            if (getIndexByMa(cv.getMa()) == -3) return "Không tìm thấy mã";
+            return deleteChucVuToDB(cv);
+        } catch (SQLException ex) {
+            Logger.getLogger(ChucVuService.class.getName()).log(Level.SEVERE, null, ex);
+            return "Không thành công";
+        }
+    }
+    public List<ChucVu> sort(int temp){//Nếu là 1 = ASC, 0 = DESC
+        if (temp ==1) {
+            _lstChucVus.sort(Comparator.comparing(ChucVu::getMa));
+            return _lstChucVus;
+        }
+        _lstChucVus.sort(Comparator.comparing(ChucVu::getMa).reversed());
+        return _lstChucVus;
+    }
+     public List<ChucVu> search(String temp){//Tìm kiếm theo 2 cột
+        List<ChucVu> lstTemp = new ArrayList<>();
+         for (ChucVu x : _lstChucVus) {
+             if (x.getMa().toLowerCase().contains(temp.toLowerCase()) || x.getTen().toLowerCase().contains(temp.toLowerCase())) {
+                 lstTemp.add(x);
+             }
+         }
+         return lstTemp;
+    }
     /*
        Phần 3:
         - Các phương thức liên quan đến DB
@@ -63,13 +99,28 @@ public class ChucVuService {
         _st.close();
     }
     public String insertChucVuToDB(ChucVu cv) throws SQLException{
+        if (getIndexByMa(cv.getMa()) !=-3) return "Mã đã tồn tại";
         _st = _dBConnection.openDbConnection().createStatement();
         //Vì cơ sở dữ liệu thầy đang để tự tăng nên không cần truyền ID
        String insert = "INSERT INTO [ChucVu] ([Ma],[Ten])"
-                    + "Values('"+ cv.getMa()+"','"+cv.getTen()+"')";
+                    + "Values(N'"+ cv.getMa()+"',N'"+cv.getTen()+"')";
        _st.executeUpdate(insert);
        return "Thêm vào DB thành công";
     }
+    
+     public String updateChucVuToDB(ChucVu cv) throws SQLException{
+        _st = _dBConnection.openDbConnection().createStatement();
+       String update = "UPDATE [ChucVu] SET [Ten] = '"+cv.getTen()+"' WHERE [Ma]='"+cv.getMa()+"'";
+       _st.executeUpdate(update);
+       return "Sửa vào DB thành công";
+    }
+     public String deleteChucVuToDB(ChucVu cv) throws SQLException{
+        _st = _dBConnection.openDbConnection().createStatement();
+       String delete = "DELETE FROM [ChucVu] WHERE [Ma]='"+cv.getMa()+"'";
+       _st.executeUpdate(delete);
+       return "Xoá vào DB thành công";
+    }
+     
     //Viết 1 thằng check trùng
     public int getIndexByMa(String maChuVu){
         for (int i = 0; i < _lstChucVus.size(); i++) {
