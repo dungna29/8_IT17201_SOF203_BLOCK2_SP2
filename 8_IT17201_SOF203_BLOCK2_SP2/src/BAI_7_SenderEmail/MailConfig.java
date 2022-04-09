@@ -17,7 +17,7 @@ public class MailConfig {
  
     public static final String APP_EMAIL = "dungna292002@gmail.com"; // your email
  
-    public static final String APP_PASSWORD = "abc@123A"; // your password
+    public static final String APP_PASSWORD = ""; // your password
  
     public static final String RECEIVE_EMAIL = "dungna29@fpt.edu.vn"; 
 }
